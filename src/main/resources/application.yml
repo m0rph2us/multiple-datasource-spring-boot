@@ -1,7 +1,7 @@
 
 datasource:
   sample:
-    # master database connection pool using dbcp2
+    # Master database connection pool using dbcp2
     master:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: >-
@@ -27,7 +27,7 @@ datasource:
       time-between-eviction-runs-millis: 10000
       num-tests-per-eviction-run: 3
 
-    # replica database connection pool using hikari
+    # Replica database connection pool using hikari
     replica:
       driver-class-name: com.mysql.cj.jdbc.Driver
       jdbc-url: >-
