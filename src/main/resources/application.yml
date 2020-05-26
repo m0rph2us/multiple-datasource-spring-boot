@@ -1,0 +1,45 @@
+
+datasource:
+  sample:
+    # master database connection pool using dbcp2
+    master:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: >-
+        jdbc:mysql://127.0.0.1:33060/sample?useUnicode=true&characterEncoding=utf-8&useSSL=false
+        &zeroDateTimeBehavior=convertToNull
+      username: root
+      password: 1234
+      validation-query-timeout: 3
+      default-auto-commit: true
+      initial-size: 3
+      max-total: 5
+      max-idle: 5
+      min-idle: 5
+      max-wait-millis: 3000
+      # If you need performance improvement.
+      pool-prepared-statements: true
+      max-open-prepared-statements: 100
+      # Below items are very important to maintain connections keep alive.
+      validation-query: select 1
+      test-on-borrow: true
+      test-while-idle: true
+      min-evictable-idle-time-millis: 55000
+      time-between-eviction-runs-millis: 10000
+      num-tests-per-eviction-run: 3
+
+    # replica database connection pool using hikari
+    replica:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: >-
+        jdbc:mysql://127.0.0.1:33070/sample?useUnicode=true&characterEncoding=utf-8&useSSL=false
+        &zeroDateTimeBehavior=convertToNull
+      username: root
+      password: 1234
+      maximum-pool-size: 10
+      max-lifetime: 55000 # This item is very important to maintain a connection keep alive.
+      pool-name: sample-db-pool
+      # If you need performance improvement.
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 50
+        prepStmtCacheSqlLimit: 2048
