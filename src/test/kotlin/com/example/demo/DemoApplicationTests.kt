@@ -1,13 +1,20 @@
 package com.example.demo
 
+import org.hamcrest.Matchers
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.transaction.annotation.EnableTransactionManagement
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.web.context.WebApplicationContext
+import org.springframework.web.filter.CharacterEncodingFilter
 import java.util.*
 import javax.persistence.EntityManagerFactory
 import kotlin.test.assertEquals
@@ -22,8 +29,20 @@ class DemoApplicationTests {
 	@Autowired
 	lateinit var tbUserRepository: TbUserRepository
 
+	protected lateinit var mvc: MockMvc
+
+	protected lateinit var mockMvcBuilder: DefaultMockMvcBuilder
+
+	@Autowired
+	private val context: WebApplicationContext? = null
+
 	@BeforeEach
 	fun setUp() {
+		mockMvcBuilder = MockMvcBuilders.webAppContextSetup(context!!)
+				.addFilter(CharacterEncodingFilter("UTF-8", true))
+
+		mvc = mockMvcBuilder.build()
+
 		cleanUp()
 	}
 
@@ -75,6 +94,18 @@ class DemoApplicationTests {
 				assertEquals("N", it.deleteYn)
 			}
 		}
+	}
+
+	@Test
+	fun `Should retrieve a user record from api call`() {
+		mvc.perform(MockMvcRequestBuilders.post("/saveData"))
+				.andExpect(MockMvcResultMatchers.status().isOk)
+
+		mvc.perform(MockMvcRequestBuilders.get("/getData"))
+				.andExpect(MockMvcResultMatchers.status().isOk)
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0]",
+													  Matchers.`is`("morph's id")))
 	}
 
 }
