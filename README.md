@@ -1,3 +1,3 @@
 # multiple-datasource-spring-data-jpa
 
-This example need [docker-mysql](https://github.com/m0rph2us/docker-mysql) for the MySQL database.
+Multiple datasource example for spring data jpa. This example need [docker-mysql](https://github.com/m0rph2us/docker-mysql) for the MySQL database.
